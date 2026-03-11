@@ -38,7 +38,6 @@ def demo_survey_rows() -> List[dict]:
 
 # ---------- Column detection helpers ----------
 def pick_first_existing_column(row: dict, options: List[str], fallback: str) -> str:
-    """Return the first column name that exists in the row; else fallback."""
     for col in options:
         if col in row:
             return col
@@ -46,7 +45,6 @@ def pick_first_existing_column(row: dict, options: List[str], fallback: str) -> 
 
 
 def detect_survey_columns(survey_rows: List[dict]) -> Tuple[str, str, str]:
-    """Detect likely column names based on the first row's keys."""
     if not survey_rows:
         # fall back to survey_references defaults
         return (
@@ -94,12 +92,8 @@ def detect_survey_columns(survey_rows: List[dict]) -> Tuple[str, str, str]:
     return dorm_col, exp_col, stress_col
 
 
-# ---------- Stress factor ----------
 def calculate_stress_level_factor(survey_rows: List[dict], stress_col: str) -> Optional[float]:
-    """
-    Average stress (1–5) normalized to a 0–1 scale:
-      1 -> 0.00, 3 -> 0.50, 5 -> 1.00
-    """
+
     if not survey_rows:
         return None
 
@@ -116,7 +110,6 @@ def calculate_stress_level_factor(survey_rows: List[dict], stress_col: str) -> O
     return (avg_stress - 1) / 4
 
 
-# ---------- Report builders ----------
 def build_basic_report(college: CollegeData) -> List[str]:
     lines: List[str] = []
     lines.append("Milestone Project — Limited Housing → Overcrowding + Student Distress")
@@ -168,11 +161,9 @@ def append_survey_report_lines(lines: List[str], college: CollegeData, survey_ro
         else "Stress Level Factor: N/A"
     )
 
-    # Percent stressed
     percent = survey_impl.percent_stressed(survey_rows, stress_col=stress_col, stressed_threshold=4)
     lines.append(f"Percent stressed (stress >= 4): {percent:.1f}%" if percent is not None else "Percent stressed: N/A")
 
-    # Average stress (1–5)
     stress_vals = [
         survey_impl.one_to_five(r.get(stress_col, "")) for r in survey_rows
     ]
@@ -180,7 +171,6 @@ def append_survey_report_lines(lines: List[str], college: CollegeData, survey_ro
     avg_stress = (sum(stress_vals) / len(stress_vals)) if stress_vals else None
     lines.append(f"Average stress level: {avg_stress:.2f}/5" if avg_stress is not None else "Average stress level: N/A")
 
-    # Average happiness (experience only)
     happiness_vals: List[float] = []
     for row in survey_rows:
         happiness, _ = survey_impl.compute_happiness_from_experience(row, experience_col=exp_col)
@@ -188,7 +178,6 @@ def append_survey_report_lines(lines: List[str], college: CollegeData, survey_ro
     avg_h = (sum(happiness_vals) / len(happiness_vals)) if happiness_vals else None
     lines.append(f"Average happiness (experience-only): {avg_h:.1f}/100" if avg_h is not None else "Average happiness: N/A")
 
-    # Per respondent
     base_cost = college.records[-1].housing_cost_per_student if college.records else 0.0
     lines.append("")
     lines.append("Per-respondent (stress + cost estimate + happiness):")
@@ -219,12 +208,10 @@ def make_report(college: CollegeData, survey_rows: Optional[List[dict]] = None) 
     return "\n".join(lines)
 
 
-# ---------- Main ----------
 def main(argv: Optional[List[str]] = None) -> int:
     if argv is None:
         argv = sys.argv[1:]
 
-    # Demo mode (prints survey + stress factor)
     if len(argv) == 0:
         college = CollegeData(demo_records())
         survey_rows = demo_survey_rows()
