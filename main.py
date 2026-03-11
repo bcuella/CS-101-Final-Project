@@ -12,11 +12,11 @@ import survey_references as survey_impl
 
 def demo_records() -> List[FreshmanClassYearRecord]:
     return [
-        FreshmanClassYearRecord(2021, 6000, 5200, 12000.0),
-        FreshmanClassYearRecord(2022, 6300, 5200, 12500.0),
-        FreshmanClassYearRecord(2023, 6700, 5400, 13000.0),
-        FreshmanClassYearRecord(2024, 7100, 5400, 13500.0),
-        FreshmanClassYearRecord(2025, 7600, 5400, 14000.0),
+        FreshmanClassYearRecord(2021, 5476, 4386, 9642),
+        FreshmanClassYearRecord(2022, 5103, 4386, 10964),
+        FreshmanClassYearRecord(2023, 5540, 4386, 11940),
+        FreshmanClassYearRecord(2024, 5271, 4386, 13825.5),
+        FreshmanClassYearRecord(2025, 5811, 4386, 15882)
     ]
 
 
